@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Naver Map</title>
+    <title>My Naver Map on GitHub Pages</title>
+    <!-- 네이버 지도 API 스크립트 (YOUR_CLIENT_ID를 본인의 클라이언트 ID로 변경) -->
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=t0wcfbn01y"></script>
     <style>
         /* 지도 스타일 */
         #map {
             width: 100%;
             height: 80vh;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
     </style>
 </head>
@@ -18,11 +22,38 @@
     <div id="map"></div>
 
     <script>
+        // 지도 옵션 설정
         var mapOptions = {
-            center: new naver.maps.LatLng(37.5665, 126.9780), // 서울 좌표
+            center: new naver.maps.LatLng(37.5665, 126.9780), // 서울 좌표 (기본)
             zoom: 10
         };
+        
+        // 지도 객체 생성
         var map = new naver.maps.Map('map', mapOptions);
+
+        // 장소 리스트 데이터
+        const locations = [
+            { name: "홍대 맛집", category: "음식점", lat: 37.557, lng: 126.923 },
+            { name: "신세계 백화점", category: "쇼핑", lat: 37.564, lng: 126.978 },
+            { name: "서울 미술관", category: "미술관", lat: 37.579, lng: 126.977 }
+        ];
+
+        // 각 장소에 마커와 정보창 추가
+        locations.forEach(location => {
+            const marker = new naver.maps.Marker({
+                position: new naver.maps.LatLng(location.lat, location.lng),
+                map: map
+            });
+
+            const infoWindow = new naver.maps.InfoWindow({
+                content: `<div style="padding:10px;max-width:200px;">${location.name} (${location.category})</div>`
+            });
+
+            // 마커 클릭 이벤트 - 정보창 열기
+            naver.maps.Event.addListener(marker, 'click', function() {
+                infoWindow.open(map, marker);
+            });
+        });
     </script>
 </body>
 </html>
